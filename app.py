@@ -12,7 +12,7 @@ migrate = Migrate(app, db)
 
 @app.route('/')
 def index():
-    return jsonify({'message': 'Welcome to karanja_shop API'})
+    return jsonify({'message': 'Welcome to moringa API'})
 @app.route('/asset', methods=['POST'])
 def create_assets():
     
@@ -35,3 +35,10 @@ def create_assets():
 def get_assets():
     assets = Asset.query.all()
     return jsonify({'assets': [asset.to_dict() for asset in assets]}), 200  
+
+@app.route('/asset/<asset_id>', methods=['GET'])
+def get_asset(asset_id):
+    asset = Asset.query.filter_by(asset_id=asset_id).first()
+    if asset is None:
+        return jsonify({'message': 'Asset not found'}), 404
+    return jsonify({'asset': asset.to_dict()}), 200
