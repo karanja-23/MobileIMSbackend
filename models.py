@@ -8,12 +8,12 @@ class Asset(db.Model, SerializerMixin):
     
     id = db.Column(db.Integer, primary_key=True)
     asset_id = db.Column(db.String(80), unique=True, nullable=False)
-    name = db.Column(db.String(80), unique=True, nullable=False)
-    description = db.Column(db.String(80), unique=True, nullable=False)
-    condition = db.Column(db.String(80), unique=True, nullable=False)
-    category = db.Column(db.String(80), unique=True, nullable=False)
-    space=db.Column(db.String(80), unique=True, nullable=False)
-    status=db.Column(db.String(80), unique=True, nullable=False)
+    name = db.Column(db.String(80), unique=False, nullable=False)
+    description = db.Column(db.String(225), unique=False, nullable=False)
+    condition = db.Column(db.String(80), unique=False, nullable=False)
+    category = db.Column(db.String(80), unique=False, nullable=False)
+    space=db.Column(db.String(80), unique=False, nullable=False)
+    status=db.Column(db.String(80), unique=False, nullable=False)
     
     def __repr__(self):
         return '<Asset %r>' % self.name
