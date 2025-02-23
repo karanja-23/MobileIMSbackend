@@ -27,3 +27,8 @@ def create_assets():
     db.session.add(asset)
     db.session.commit()
     return jsonify({'message': 'Asset created successfully'}), 201
+
+@app.route('/assets', methods=['GET'])
+def get_assets():
+    assets = Asset.query.all()
+    return jsonify({'assets': [asset.to_dict() for asset in assets]}), 200  
