@@ -15,7 +15,10 @@ def index():
     return jsonify({'message': 'Welcome to karanja_shop API'})
 @app.route('/asset', methods=['POST'])
 def create_assets():
+    
     asset_id = request.json.get('asset_id')
+    if asset.id == Asset.query.filter_by(asset_id=asset_id).first():    
+        return jsonify({'message': 'Asset already exists'}), 400
     name = request.json.get('name')
     description = request.json.get('description')
     condition = request.json.get('condition')
