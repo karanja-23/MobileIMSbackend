@@ -17,7 +17,7 @@ def index():
 def create_assets():
     
     asset_id = request.json.get('asset_id')
-    if asset_id == Asset.query.filter_by(asset_id=asset_id).first() is not None:    
+    if Asset.query.filter_by(asset_id=asset_id).first() is not None:
         return jsonify({'message': 'Asset already exists'}), 400
     name = request.json.get('name')
     description = request.json.get('description')
