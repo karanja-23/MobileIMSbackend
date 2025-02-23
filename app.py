@@ -13,7 +13,7 @@ migrate = Migrate(app, db)
 def index():
     return jsonify({'message': 'Welcome to karanja_shop API'})
 @app.route('/asset', methods=['POST'])
-def get_assets():
+def create_assets():
     asset_id = request.json.get('asset_id')
     name = request.json.get('name')
     description = request.json.get('description')
