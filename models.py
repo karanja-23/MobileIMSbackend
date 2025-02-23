@@ -4,7 +4,7 @@ from sqlalchemy_serializer import SerializerMixin
 db=SQLAlchemy()
 
 class Asset(db.Model, SerializerMixin):
-    __tablename__ = 'asset'
+    __tablename__ = 'assets'
     
     id = db.Column(db.Integer, primary_key=True)
     asset_id = db.Column(db.String(80), unique=True, nullable=False)
