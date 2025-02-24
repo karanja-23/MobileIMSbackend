@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request
 import os
-from models import db, Asset
+from models import db, Asset,User
 from flask_migrate import Migrate
 app = Flask(__name__)
 
@@ -42,3 +42,15 @@ def get_asset(asset_id):
     if asset is None:
         return jsonify({'message': 'Asset not found'}), 404
     return jsonify({'asset': asset.to_dict()}), 200
+
+@app.route('/users', methods=['GET'])
+def get_users():
+    users = User.query.all()
+    return jsonify({'users': [user.to_dict() for user in users]}), 200
+
+@app.route('/user/<email>', methods=['GET'])
+def get_user(email):
+    user = User.query.filter_by(email=email).first()
+    if user is None:
+        return jsonify({'message': 'User not found'}), 404
+    return jsonify({'user': user.to_dict()}), 200
