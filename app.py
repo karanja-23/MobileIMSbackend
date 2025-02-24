@@ -54,3 +54,15 @@ def get_user(email):
     if user is None:
         return jsonify({'message': 'User not found'}), 404
     return jsonify({'user': user.to_dict()}), 200
+@app.route('/user', methods=['POST'])
+def create_user():
+    email = request.json.get('email')
+    if User.query.filter_by(email=email).first() is not None:
+        return jsonify({'message': 'User already exists'}), 400
+    username = request.json.get('username')
+    password = request.json.get('password')
+
+    user = User(email=email, username=username, password=password)
+    db.session.add(user)
+    db.session.commit()
+    return jsonify({'message': 'User created successfully'}), 201
