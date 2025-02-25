@@ -66,3 +66,16 @@ def create_user():
     db.session.add(user)
     db.session.commit()
     return jsonify({'message': 'User created successfully'}), 201
+@app.route('/edituser/<email>', methods=['PATCH'])
+def edit_user(email):
+    user = User.query.filter_by(email=email).first()
+    if user is None:
+        return jsonify({'message': 'Email address not found'}), 404
+    username = request.json.get('username')
+    password = request.json.get('password')
+    phone_number = request.json.get('phone_number')
+    user.username = username
+    user.password = password
+    user.phone_number = phone_number
+    db.session.commit()
+    return jsonify({'message': 'User updated successfully'}), 200
