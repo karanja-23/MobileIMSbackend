@@ -52,7 +52,7 @@ def get_users():
 def get_user(email):
     user = User.query.filter_by(email=email).first()
     if user is None:
-        return jsonify({'message': 'User not found'}), 404
+        return jsonify({'message': 'Email address not found'}), 404
     return jsonify({'user': user.to_dict()}), 200
 @app.route('/user', methods=['POST'])
 def create_user():
