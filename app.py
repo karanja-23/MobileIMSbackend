@@ -31,7 +31,26 @@ def create_assets():
     db.session.add(asset)
     db.session.commit()
     return jsonify({'message': 'Asset created successfully'}), 201
-
+@app.route('/asset/<asset_id>', methods=['PATCH'])
+def update_asset(asset_id):
+    asset = Asset.query.filter_by(asset_id=asset_id).first()
+    if asset is None:
+        return jsonify({'message': 'Asset not found'}), 404
+    name = request.json.get('name')
+    description = request.json.get('description')
+    condition = request.json.get('condition')
+    category = request.json.get('category')
+    space = request.json.get('space')
+    status = request.json.get('status')
+    asset.name = name
+    asset.description = description
+    asset.condition = condition
+    asset.category = category
+    asset.space = space
+    asset.status = status
+    
+    db.session.commit()
+    return jsonify({'message': 'Asset updated successfully'}), 200
 @app.route('/assets', methods=['GET'])
 def get_assets():
     assets = Asset.query.all()
