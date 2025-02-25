@@ -25,6 +25,7 @@ def create_assets():
     category = request.json.get('category')
     space = request.json.get('space')
     status = request.json.get('status')
+    date_created = request.json.get('date_created')
 
     asset = Asset(asset_id=asset_id, name=name, description=description, condition=condition, category=category, space=space, status=status)
     db.session.add(asset)
