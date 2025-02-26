@@ -122,7 +122,7 @@ def create_user():
 
 
 @app.route('/protected/user', methods=['GET'])
-@jwt_required
+
 def protected_user():
     current_user_email = get_jwt_identity()
     user = User.query.filter_by(email=current_user_email).first()
