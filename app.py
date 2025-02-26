@@ -93,8 +93,9 @@ def get_users():
 
 
 
-@app.route('/user/<email>', methods=['GET'])
-def login(email):
+@app.route('/user', methods=['GET'])
+def login():
+    email = request.args.get('email')
     password = request.args.get('password')
     user = User.query.filter_by(email=email).first()
     if not user:
