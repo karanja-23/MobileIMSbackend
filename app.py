@@ -147,16 +147,16 @@ def create_scanned():
     """
     data = request.get_json()
     asset_id = data.get('asset_id')
-    user_id = data.get('user_id')
+    id = data.get('id')
 
-    if not asset_id or not user_id:
-        return jsonify({'error': 'Missing asset_id or user_id'}), 400
+    if not asset_id or not id:
+        return jsonify({'error': 'Missing asset_id or id'}), 400
 
     asset = Asset.query.get(asset_id)
-    user = User.query.get(user_id)
+    user = User.query.filter(id)
 
     if not asset or not user:
-        return jsonify({'error': 'Invalid asset_id or user_id'}), 400
+        return jsonify({'error': 'Invalid asset_id or id'}), 400
 
     scanned = Scanned(asset=asset, user=user)
     db.session.add(scanned)
