@@ -96,8 +96,9 @@ def get_users():
 @app.route('/user/<email>', methods=['GET'])
 def login(email):
     password = request.json.get('password')
+    email = request.json.get('email')
     user = User.query.filter_by(email=email).first()
-    if user is None :
+    if not user:
         return jsonify({'message': 'Invalid email'}), 401
     if user.password != password:
         return jsonify({'message': 'Invalid password'}), 401
