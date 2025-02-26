@@ -128,7 +128,7 @@ def protected_user():
     user = User.query.filter_by(email=current_user_email).first()
     if user is None:
         return jsonify({'message': 'User not found'}), 404
-    return jsonify({user.to_dict}), 200
+    return jsonify(user.to_dict()), 200
 
  
 @app.route('/edituser/<email>', methods=['PATCH'])
