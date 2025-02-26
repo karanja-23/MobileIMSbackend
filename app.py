@@ -97,8 +97,11 @@ def get_users():
 def login(email):
     password = request.args.get('password')
     user = User.query.filter_by(email=email).first()
-    if user is None or user.password != password:
-        return jsonify({'message': 'Invalid email or password'}), 401
+    if user is None :
+        return jsonify({'message': 'Invalid email'}), 401
+    if user.password != password:
+        return jsonify({'message': 'Invalid password'}), 401
+        
     access_token = create_access_token(identity=user.email, expires_delta=False)
     return jsonify({'access_token': access_token}), 200
 
