@@ -14,6 +14,7 @@ class Asset(db.Model, SerializerMixin):
     category = db.Column(db.String(80), unique=False, nullable=False)
     space=db.Column(db.String(80), unique=False, nullable=False)
     status=db.Column(db.String(80), unique=False, nullable=False)
+    date_created = db.Column(db.DateTime, default=db.func.current_timestamp(), nullable=False)
     
     def __repr__(self):
         return '<Asset %r>' % self.name
