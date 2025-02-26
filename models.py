@@ -18,7 +18,9 @@ class Asset(db.Model, SerializerMixin):
     
     def __repr__(self):
         return '<Asset %r>' % self.name
-    
+
+
+   
 class User(db.Model, SerializerMixin):
     __tablename__ = 'users'
     
@@ -30,3 +32,20 @@ class User(db.Model, SerializerMixin):
     
     def __repr__(self):
         return '<User %r>' % self.username
+    
+
+
+
+class Scanned(db.Model, SerializerMixin):
+    __tablename__ = 'scanned'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    asset_id = db.Column(db.Integer, db.ForeignKey('assets.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    scanned_at = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp())
+    
+    asset = db.relationship('Asset', backref=db.backref('scanned', lazy=True))
+    user = db.relationship('User', backref=db.backref('scanned', lazy=True))
+    
+    def __repr__(self):
+        return '<Scanned %r>' % self.id
