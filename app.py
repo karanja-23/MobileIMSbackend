@@ -2,6 +2,8 @@ from flask import Flask, jsonify, request
 import os
 from models import db, Asset,User,Scanned
 from flask_migrate import Migrate
+from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity
+
 
 
 app = Flask(__name__)
@@ -89,11 +91,13 @@ def get_users():
 
 
 @app.route('/user/<email>', methods=['GET'])
-def get_user(email):
+def login(email):
+    password = request.args.get('password')
     user = User.query.filter_by(email=email).first()
-    if user is None:
-        return jsonify({'message': 'Email address not found'}), 404
-    return jsonify({'user': user.to_dict()}), 200
+    if user is None or not user.check_password(password):
+        return jsonify({'message': 'Invalid email or password'}), 401
+    access_token = create_access_token(identity=user.email, expires_delta=False)
+    return jsonify({'access_token': access_token}), 200
 
 
 @app.route('/user', methods=['POST'])
