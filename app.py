@@ -10,6 +10,9 @@ app = Flask(__name__)
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URI')
+app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY')
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = 1209600 
+jwt = JWTManager(app)
 
 db.init_app(app)
 migrate = Migrate(app, db)
@@ -112,6 +115,17 @@ def create_user():
     db.session.add(user)
     db.session.commit()
     return jsonify({'message': 'User created successfully'}), 201
+
+
+
+@app.route('/protected/user', methods=['GET'])
+@jwt_required
+def protected_user():
+    current_user_email = get_jwt_identity()
+    user = User.query.filter_by(email=current_user_email).first()
+    if user is None:
+        return jsonify({'message': 'User not found'}), 404
+    return jsonify({'user': user.to_dict()}), 200
 
 
 @app.route('/edituser/<email>', methods=['PATCH'])
