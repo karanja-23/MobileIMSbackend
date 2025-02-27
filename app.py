@@ -169,8 +169,8 @@ def create_scanned():
     if not asset_id or not id:
         return jsonify({'error': 'Missing asset_id or id'}), 400
 
-    asset = Asset.query.get(asset_id)
-    user = User.query.get(id)
+    asset = Asset.query.filter_by(asset_id=asset_id).first()
+    user = User.filter_by(id=id).first()
 
     if not asset or not user:
         return jsonify({'error': 'Invalid asset_id or id'}), 400
