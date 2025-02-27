@@ -162,10 +162,11 @@ def create_scanned():
     """
     Create a new scanned entry
     """
-    data = request.get_json()
-    asset_id = data.get('asset_id')
-    id = data.get('id')
-
+   
+    
+    asset_id = request.json.get('asset_id')
+    id = request.json.get('id')   
+     
     if not asset_id or not id:
         return jsonify({'error': 'Missing asset_id or id'}), 400
 
