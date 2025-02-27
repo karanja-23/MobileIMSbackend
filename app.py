@@ -122,16 +122,15 @@ def create_user():
 
 
 @app.route('/protected/user', methods=['GET'])
-@jwt_required
+@jwt_required()
 def protected_user():
     current_user_email = get_jwt_identity()
     user = User.query.filter_by(email=current_user_email).first()
     if user is None:
         return jsonify({'message': 'User not found'}), 404
-    return user.to_dict(), 200
+    return jsonify(user.to_dict()), 200
 
-
-
+ 
 @app.route('/edituser/<email>', methods=['PATCH'])
 def edit_user(email):
     user = User.query.filter_by(email=email).first()
