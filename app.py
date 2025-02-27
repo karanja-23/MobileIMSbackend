@@ -93,12 +93,15 @@ def get_users():
 
 
 
-@app.route('/user/<email>', methods=['GET'])
-def login(email):
+@app.route('/user', methods=['GET'])
+def login():
+    email = request.args.get('email')
     password = request.args.get('password')
     user = User.query.filter_by(email=email).first()
-    if user is None or not user.check_password(password):
-        return jsonify({'message': 'Invalid email or password'}), 401
+    if not user:
+        return jsonify({'message': 'Invalid email'}), 401
+    if user.password != password:
+        return jsonify({'message': 'Invalid password'}), 401
     access_token = create_access_token(identity=user.email, expires_delta=False)
     return jsonify({'access_token': access_token}), 200
 
@@ -119,15 +122,15 @@ def create_user():
 
 
 @app.route('/protected/user', methods=['GET'])
-@jwt_required
+@jwt_required()
 def protected_user():
     current_user_email = get_jwt_identity()
     user = User.query.filter_by(email=current_user_email).first()
     if user is None:
         return jsonify({'message': 'User not found'}), 404
-    return jsonify({'user': user.to_dict()}), 200
+    return jsonify(user.to_dict()), 200
 
-
+ 
 @app.route('/edituser/<email>', methods=['PATCH'])
 def edit_user(email):
     user = User.query.filter_by(email=email).first()
