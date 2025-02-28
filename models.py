@@ -47,7 +47,7 @@ class Scanned(db.Model, SerializerMixin):
     asset = db.relationship('Asset', backref=db.backref('scanned', lazy=True))
     user = db.relationship('User', backref=db.backref('scanned', lazy=True))
     
-    
+    serialize_rules = ('asset', 'user', 'scanned_at')
 
     def __repr__(self):
         return '<Scanned %r>' % self.id
