@@ -30,6 +30,7 @@ class User(db.Model, SerializerMixin):
     email = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(80), unique=False, nullable=False)
     
+    scanned = db.relationship('Scanned', backref=db.backref('user', lazy=True))
     def __repr__(self):
         return '<User %r>' % self.username
     
@@ -47,14 +48,6 @@ class Scanned(db.Model, SerializerMixin):
     asset = db.relationship('Asset', backref=db.backref('scanned', lazy=True))
     user = db.relationship('User', backref=db.backref('scanned', lazy=True))
     
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'asset_id': self.asset_id,
-            'user_id': self.user_id,
-            'scanned_at': self.scanned_at,
-
-        }
-   
+    serialize_rules = ('-asset', '-user')   
     def __repr__(self):
         return '<Scanned %r>' % self.id
