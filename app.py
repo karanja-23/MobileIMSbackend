@@ -188,7 +188,7 @@ def get_scanned_history():
     Get scanned history
     """
     scanned_entries = Scanned.query.all()
-    return jsonify([scanned.serialize() for scanned in scanned_entries])
+    return jsonify([scanned.to_dict(only=['id', 'asset', 'user', 'scanned_at']) for scanned in scanned_entries])
 
 @app.route('/scanned/<int:scanned_id>', methods=['GET'])
 def get_scanned_entry(scanned_id):
