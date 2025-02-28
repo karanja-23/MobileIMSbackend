@@ -175,7 +175,7 @@ def create_scanned():
     if not asset or not user:
         return jsonify({'error': 'Invalid asset_id or id'}), 400
 
-    scanned = Scanned(asset=asset, user=user)
+    scanned = Scanned(asset_id=asset_id, user_id=id)
     db.session.add(scanned)
     db.session.commit()
 
