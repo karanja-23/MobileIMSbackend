@@ -166,22 +166,25 @@ def create_scanned():
     if not asset_id_param or not id_param:
         return jsonify({'error': 'Missing asset_id or id'}), 400
 
-    asset = Asset.query.get(int(asset_id_param))
+    asset = Asset.query.filter_by(asset_id=asset_id_param).first()
     user = User.query.get(id_param)
 
     if not asset :
-        return jsonify({'error': 'Invalid asset_id'}), 400
+        return jsonify({'error': 'Asset not found'}), 404
 
     if not user:
         return jsonify({'error': 'Invalid user_id'}), 400
+
     scanned = Scanned(asset_id=asset_id_param, user_id=id_param)
     db.session.add(scanned)
-    db.session.commit()
+
+    try:
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': 'Failed to commit changes'}), 500
 
     return jsonify({'message': 'Scanned entry created successfully'}), 201
-
-
-
 @app.route('/scanned', methods=['GET'])
 def get_scanned_history():
     """
