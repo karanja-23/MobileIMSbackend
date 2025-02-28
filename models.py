@@ -47,7 +47,15 @@ class Scanned(db.Model, SerializerMixin):
     asset = db.relationship('Asset', backref=db.backref('scanned', lazy=True))
     user = db.relationship('User', backref=db.backref('scanned', lazy=True))
     
-    serialize_rules = ('asset', 'user', 'scanned_at')
-
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'asset_id': self.asset_id,
+            'user_id': self.user_id,
+            'scanned_at': self.scanned_at,
+            'asset': self.asset.to_dict() if self.asset else None,
+            'user': self.user.to_dict() if self.user else None,
+        }
+   
     def __repr__(self):
         return '<Scanned %r>' % self.id
