@@ -46,7 +46,7 @@ class Scanned(db.Model, SerializerMixin):
     scanned_at = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp())
     
     asset = db.relationship('Asset', backref=db.backref('scanned', lazy=True))
-    user = db.relationship('User', backref=db.backref('scanned', lazy=True))
+    user = db.relationship('User', backref=db.backref('scanned_items', lazy=True))
     
     serialize_rules = ('-asset', '-user')   
     def __repr__(self):
