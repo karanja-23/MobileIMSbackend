@@ -37,8 +37,14 @@ class User(db.Model, SerializerMixin):
             'username': self.username,
             'email': self.email,
             'phone_number': self.phone_number,
-            'scanned': [scanned_item.to_dict() for scanned_item in self.scanned]
-        }    
+            'scanned': [
+                {
+                    'scanned_at': scanned_item.scanned_at,
+                    'asset': scanned_item.asset.to_dict() 
+                } 
+                for scanned_item in self.scanned
+            ]
+        }       
     def __repr__(self):
         return '<User %r>' % self.username
 
