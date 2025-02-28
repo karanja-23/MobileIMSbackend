@@ -41,7 +41,7 @@ class Scanned(db.Model, SerializerMixin):
     
     id = db.Column(db.Integer, primary_key=True)
     asset_id = db.Column(db.Integer, db.ForeignKey('assets.id'))
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    user_id = db.Column(db.BigInteger, db.ForeignKey('users.id'))
     scanned_at = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp())
     
     asset = db.relationship('Asset', backref=db.backref('scanned', lazy=True))
