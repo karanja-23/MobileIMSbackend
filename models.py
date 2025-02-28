@@ -35,6 +35,7 @@ class User(db.Model, SerializerMixin):
         return {
             'id': self.id,
             'username': self.username,
+            'password': self.password,
             'email': self.email,
             'phone_number': self.phone_number,
             'scanned': [
