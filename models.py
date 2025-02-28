@@ -53,8 +53,7 @@ class Scanned(db.Model, SerializerMixin):
             'asset_id': self.asset_id,
             'user_id': self.user_id,
             'scanned_at': self.scanned_at,
-            'asset': self.asset.to_dict() if self.asset else None,
-            'user': self.user.to_dict() if self.user else None,
+
         }
    
     def __repr__(self):
