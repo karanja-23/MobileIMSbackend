@@ -31,7 +31,7 @@ class User(db.Model, SerializerMixin):
     password = db.Column(db.String(80), unique=False, nullable=False)
     
     scanned_items = db.relationship('Scanned', lazy=True)
-    serialize_rules = ('-scanned_items')
+    
     def __repr__(self):
         return '<User %r>' % self.username
 
