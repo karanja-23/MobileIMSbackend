@@ -7,7 +7,7 @@ class Asset(db.Model, SerializerMixin):
     __tablename__ = 'assets'
     
     id = db.Column(db.Integer, primary_key=True)
-    asset_id = db.Column(db.BigInteger(80), unique=True, nullable=False)
+    asset_id = db.Column(db.BigInteger, unique=True, nullable=False)
     name = db.Column(db.String(80), unique=False, nullable=False)
     description = db.Column(db.String(225), unique=False, nullable=False)
     condition = db.Column(db.String(80), unique=False, nullable=False)
