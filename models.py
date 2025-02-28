@@ -30,10 +30,9 @@ class User(db.Model, SerializerMixin):
     email = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(80), unique=False, nullable=False)
     
-    scanned = db.relationship('Scanned', backref=db.backref('user', lazy=True))
+    scanned_items = db.relationship('Scanned', lazy=True)
     def __repr__(self):
         return '<User %r>' % self.username
-    
 
 
 
