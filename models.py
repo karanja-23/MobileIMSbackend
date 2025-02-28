@@ -31,7 +31,14 @@ class User(db.Model, SerializerMixin):
     password = db.Column(db.String(80), unique=False, nullable=False)
     
     scanned = db.relationship('Scanned', back_populates='user', lazy=True)
-    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'username': self.username,
+            'email': self.email,
+            'phone_number': self.phone_number,
+            'scanned': [scanned_item.to_dict() for scanned_item in self.scanned]
+        }    
     def __repr__(self):
         return '<User %r>' % self.username
 
