@@ -30,7 +30,7 @@ class User(db.Model, SerializerMixin):
     email = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(80), unique=False, nullable=False)
     
-    scanned = db.relationship('Scanned', lazy=True)
+    scanned = db.relationship('Scanned', back_populates='user', lazy=True)
     
     def __repr__(self):
         return '<User %r>' % self.username
@@ -46,7 +46,7 @@ class Scanned(db.Model, SerializerMixin):
     scanned_at = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp())
     
     asset = db.relationship('Asset', backref=db.backref('scanned', lazy=True))
-    user = db.relationship('User', backref=db.backref('scanned_items', lazy=True))
+    user = db.relationship('User', back_populates='scanned', lazy=True)
     
     serialize_rules = ('-asset', '-user')   
     def __repr__(self):
