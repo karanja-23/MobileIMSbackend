@@ -160,8 +160,8 @@ def delete_user(email):
 @app.route('/scanned', methods=['POST'])
 def create_scanned():
     name = request.json.get('name')
-    
-    scanned = Scanned(name=name)
+    user_id=request.json.get('user_id')
+    scanned = Scanned(name=name, user_id=user_id)
     db.session.add(scanned)
     db.session.commit()
     return jsonify({'message': 'Scanned entry created successfully'}), 201
