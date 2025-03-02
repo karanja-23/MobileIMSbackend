@@ -182,8 +182,8 @@ def create_scanned():
 
 @app.route('/scanned/<int:scanned_id>', methods=['DELETE'])
 
-def delete_scanned(id):
-    scanned = Scanned.query.get(id)
+def delete_scanned(scanned_id):
+    scanned = Scanned.query.get(scanned_id)
     if not scanned:
         return jsonify({'error': 'Scanned entry not found'}), 404
     db.session.delete(scanned)
