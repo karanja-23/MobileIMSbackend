@@ -159,27 +159,12 @@ def delete_user(email):
 
 @app.route('/scanned', methods=['POST'])
 def create_scanned():
+    name = request.json.get('name')
     
-    asset_id_param = request.json.get('asset_id')
-    id_param = request.json.get('id')   
-     
-    if not asset_id_param or not id_param:
-        return jsonify({'error': 'Missing asset_id or id'}), 400
-
-    asset = Asset.query.get(asset_id_param)
-    user = User.query.get(id_param)
-
-    if not asset :
-        return jsonify({'error': 'Invalid asset_id'}), 400
-
-    if not user:
-        return jsonify({'error': 'Invalid user_id'}), 400
-    scanned = Scanned(asset_id=asset_id_param, user_id=id_param)
+    scanned = Scanned(name=name)
     db.session.add(scanned)
     db.session.commit()
-
     return jsonify({'message': 'Scanned entry created successfully'}), 201
-
 @app.route('/scanned/<int:scanned_id>', methods=['DELETE'])
 
 def delete_scanned(scanned_id):
