@@ -30,7 +30,7 @@ class User(db.Model, SerializerMixin):
     email = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(80), unique=False, nullable=False)
     
-    scanned = db.relationship('Scanned', back_populates='user', lazy=True)
+    
     def to_dict(self):
         return {
             'id': self.id,
@@ -38,13 +38,7 @@ class User(db.Model, SerializerMixin):
             'password': self.password,
             'email': self.email,
             'phone_number': self.phone_number,
-            'scanned': [
-                {
-                    'scanned_at': scanned_item.scanned_at,
-                    'asset': scanned_item.asset.to_dict() 
-                } 
-                for scanned_item in self.scanned
-            ]
+
         }       
     def __repr__(self):
         return '<User %r>' % self.username
@@ -55,13 +49,10 @@ class Scanned(db.Model, SerializerMixin):
     __tablename__ = 'scanned'
     
     id = db.Column(db.Integer, primary_key=True)
-    asset_id = db.Column(db.Integer, db.ForeignKey('assets.id'))
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    name=db.Column(db.String(80), unique=False, nullable=False)
+    status=db.Column(db.String(80), default='pending approval', unique=False, nullable=False)
     scanned_at = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp())
-    
-    asset = db.relationship('Asset', backref=db.backref('scanned', lazy=True))
-    user = db.relationship('User', back_populates='scanned', lazy=True)
-    
+
     serialize_rules = ('-asset', '-user')   
     def __repr__(self):
         return '<Scanned %r>' % self.id
