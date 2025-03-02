@@ -50,7 +50,7 @@ class Scanned(db.Model, SerializerMixin):
     
     id = db.Column(db.Integer, primary_key=True)
     name=db.Column(db.String(80), unique=False, nullable=False)
-    status=db.Column(db.String(80), default='pending approval', unique=False, nullable=False)
+    status=db.Column(db.String(80), default='pending', unique=False, nullable=False)
     scanned_at = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp())
 
     serialize_rules = ('-asset', '-user')   
