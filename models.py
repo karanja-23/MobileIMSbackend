@@ -30,16 +30,7 @@ class User(db.Model, SerializerMixin):
     email = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(80), unique=False, nullable=False)
     
-    
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'username': self.username,
-            'password': self.password,
-            'email': self.email,
-            'phone_number': self.phone_number,
-
-        }       
+         
     def __repr__(self):
         return '<User %r>' % self.username
 
@@ -49,10 +40,12 @@ class Scanned(db.Model, SerializerMixin):
     __tablename__ = 'scanned'
     
     id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     name=db.Column(db.String(80), unique=False, nullable=False)
     status=db.Column(db.String(80), default='pending', unique=False, nullable=False)
     scanned_at = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp())
-
+    user = db.relationship('User', backref=db.backref('scanned_assets', lazy=True))
+    
     serialize_rules = ('-asset', '-user')   
     def __repr__(self):
         return '<Scanned %r>' % self.id
