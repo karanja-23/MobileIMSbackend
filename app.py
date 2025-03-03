@@ -2,8 +2,7 @@ from flask import Flask, jsonify, request
 import os
 from models import db,  Scanned, Request
 from flask_migrate import Migrate
-from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity
-import requests
+
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -18,8 +17,8 @@ DB_CONFIG = {
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://{DB_CONFIG['user']}:{DB_CONFIG['password']}@{DB_CONFIG['host']}:{DB_CONFIG['port']}/{DB_CONFIG['dbname']}"
 
-app.config['JWT_ACCESS_TOKEN_EXPIRES'] = 1209600 
-jwt = JWTManager(app)
+
+
 
 db.init_app(app)
 migrate = Migrate(app, db)
