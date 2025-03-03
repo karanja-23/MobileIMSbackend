@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request
 import os
-from models import db, Asset,User,Scanned
+from models import db, Asset, User, Scanned, Request
 from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity
 import requests
@@ -239,3 +239,53 @@ def get_scanned_entry(scanned_id):
     if scanned:
         return jsonify(scanned.to_dict())
     return jsonify({'error': 'Scanned entry not found'}), 404
+
+
+@app.route('/requests', methods=['POST'])
+def create_request():
+    asset_id = request.json.get('asset_id')
+    user_id = request.json.get('user_id')
+    request = Request(asset_id=asset_id, user_id=user_id)
+    db.session.add(request)
+    db.session.commit()
+    return jsonify({'message': 'Request created successfully'}), 201
+
+@app.route('/requests/<int:request_id>', methods=['GET'])
+def get_request(request_id):
+    request = Request.query.get(request_id)
+    if request is None:
+        return jsonify({'message': 'Request not found'}), 404
+    return jsonify(request.to_dict()), 200
+
+@app.route('/requests/<int:request_id>/approve', methods=['PATCH'])
+def approve_request(request_id):
+    request = Request.query.get(request_id)
+    if request is None:
+        return jsonify({'message': 'Request not found'}), 404
+    request.status = 'approved'
+    db.session.commit()
+    return jsonify({'message': 'Request approved successfully'}), 200
+
+@app.route('/requests/<int:request_id>/reject', methods=['PATCH'])
+def reject_request(request_id):
+    request = Request.query.get(request_id)
+    if request is None:
+        return jsonify({'message': 'Request not found'}), 404
+    request.status = 'rejected'
+    db.session.commit()
+    return jsonify({'message': 'Request rejected successfully'}), 200
+
+@app.route('/requests/<int:request_id>/return', methods=['PATCH'])
+def return_asset(request_id):
+    request = Request.query.get(request_id)
+    if request is None:
+        return jsonify({'message': 'Request not found'}), 404
+    request.status = 'returned'
+    request.returned_at = db.func.current_timestamp()
+    db.session.commit()
+    return jsonify({'message': 'Asset returned successfully'}), 200
+
+@app.route('/requests', methods=['GET'])
+def get_requests():
+    requests = Request.query.all()
+    return jsonify({'requests': [request.to_dict() for request in requests]}), 200
