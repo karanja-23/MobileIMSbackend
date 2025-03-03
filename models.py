@@ -49,3 +49,16 @@ class Scanned(db.Model, SerializerMixin):
     serialize_rules = ('-asset', '-user')   
     def __repr__(self):
         return '<Scanned %r>' % self.id
+
+
+
+class Request(db.Model, SerializerMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    asset_id = db.Column(db.Integer, db.ForeignKey('assets.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    status = db.Column(db.String(50), default='pending')
+    requested_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+    returned_at = db.Column(db.DateTime, nullable=True)
+
+    asset = db.relationship('Asset', backref='requests')
+    user = db.relationship('User', backref='requests')
