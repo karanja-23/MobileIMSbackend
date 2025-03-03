@@ -3,7 +3,7 @@ import os
 from models import db, Asset,User,Scanned
 from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity
-
+import requests
 
 
 app = Flask(__name__)
@@ -133,6 +133,7 @@ def protected_user():
  
 @app.route('/edituser/<email>', methods=['PATCH'])
 def edit_user(email):
+
     user = User.query.filter_by(email=email).first()
     if user is None:
         return jsonify({'message': 'Email address not found'}), 404
@@ -159,29 +160,67 @@ def delete_user(email):
 
 @app.route('/scanned', methods=['POST'])
 def create_scanned():
-    """
-    Create a new scanned entry
-    """
-    data = request.get_json()
-    asset_id = data.get('asset_id')
-    id = data.get('id')
-
-    if not asset_id or not id:
-        return jsonify({'error': 'Missing asset_id or id'}), 400
-
-    asset = Asset.query.get(asset_id)
-    user = User.query.filter(id)
-
-    if not asset or not user:
-        return jsonify({'error': 'Invalid asset_id or id'}), 400
-
-    scanned = Scanned(asset_id=asset_id, user_id=id)
+    name = request.json.get('name')
+    user_id=request.json.get('user_id')
+    scanned = Scanned(name=name, user_id=user_id)
     db.session.add(scanned)
     db.session.commit()
-
     return jsonify({'message': 'Scanned entry created successfully'}), 201
+@app.route('/scanned/<int:scanned_id>', methods=['PATCH'])
+def update_scanned(scanned_id):
+    expo_token = request.args.get('expo_token')
+    scanned = Scanned.query.get(scanned_id)
+    if not scanned:
+        return jsonify({'error': 'Scanned entry not found'}), 404
+    status = request.json.get('status')
+    scanned.status = status
+    db.session.commit()
+    
+    if status == 'approved':
+        url = 'https://api.exp.host/v2/push/send'
+        headers = {
+            'Content-Type': 'application/json',
+        }
+        data = {
+            'to': expo_token,
+            'sound': 'default',
+            'title': 'Approved',
+            'body': 'Asset request has been approved',
+        }
+        response = requests.post(url, headers=headers, json=data)
+        if response.status_code != 200:
+            return jsonify({'error': 'Failed to send notification'}), 500
+    elif status == 'rejected':
+        url = 'https://api.exp.host/v2/push/send'
+        headers = {
+            'Content-Type': 'application/json',
+        }
+        data = {
+            'to': expo_token,
+            'sound': 'default',
+            'title': 'Rejected',
+            'body': 'Asset request has been cancelled',
+        }
+        response = requests.post(url, headers=headers, json=data)
+        if response.status_code != 200:
+            return jsonify({'error': 'Failed to send notification'}), 500
+    return jsonify({'message': 'Scanned entry updated successfully'}), 200
+@app.route('/scanned/<int:scanned_id>', methods=['DELETE'])
+def delete_scanned(scanned_id):
+    scanned = Scanned.query.get(scanned_id)
+    if not scanned:
+        return jsonify({'error': 'Scanned entry not found'}), 404
+    db.session.delete(scanned)
+    db.session.commit()
+    return jsonify({'message': 'Scanned entry deleted successfully'}), 200
 
-
+def delete_scanned(scanned_id):
+    scanned = Scanned.query.get(scanned_id)
+    if not scanned:
+        return jsonify({'error': 'Scanned entry not found'}), 404
+    db.session.delete(scanned)
+    db.session.commit()
+    return jsonify({'message': 'Scanned entry deleted successfully'}), 200
 
 @app.route('/scanned', methods=['GET'])
 def get_scanned_history():
