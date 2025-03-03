@@ -2,7 +2,7 @@ from flask import Flask, jsonify, request
 import os
 from models import db,  Scanned, Request
 from flask_migrate import Migrate
-
+import requests
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -16,8 +16,6 @@ DB_CONFIG = {
     }
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://{DB_CONFIG['user']}:{DB_CONFIG['password']}@{DB_CONFIG['host']}:{DB_CONFIG['port']}/{DB_CONFIG['dbname']}"
-
-
 
 
 db.init_app(app)
