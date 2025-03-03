@@ -4,13 +4,20 @@ from models import db,  Scanned, Request
 from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager, jwt_required, create_access_token, get_jwt_identity
 import requests
-
+from dotenv import load_dotenv
+load_dotenv()
 
 app = Flask(__name__)
-
+DB_CONFIG = {
+        "dbname": os.getenv("POSTGRES_DB"),
+        "user": os.getenv("POSTGRES_USER"),
+        "password": os.getenv("POSTGRES_PASSWORD"),
+        "host": os.getenv("POSTGRES_HOST"),
+        "port": os.getenv("DB_PORT")
+    }
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URI')
-app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY')
+app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://{DB_CONFIG['user']}:{DB_CONFIG['password']}@{DB_CONFIG['host']}:{DB_CONFIG['port']}/{DB_CONFIG['dbname']}"
+
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = 1209600 
 jwt = JWTManager(app)
 
@@ -153,3 +160,6 @@ def return_asset(request_id):
 def get_requests():
     requests = Request.query.all()
     return jsonify({'requests': [request.to_dict() for request in requests]}), 200
+
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0', port=5090)
