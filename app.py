@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request
 import os
-from models import db,  Scanned, Request
+from models import db,  Scanned, Request, User
 from flask_migrate import Migrate
 import requests
 from dotenv import load_dotenv
@@ -160,3 +160,8 @@ def get_requests():
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=6010)
+    
+@app.route('/users/all', methods=['GET'])
+def get_all_users():
+    users = User.query.all()
+    return jsonify({'users': [user.to_dict() for user in users]}), 200
