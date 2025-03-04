@@ -1,30 +1,29 @@
 from app import app
-from models import db, Request  # Make sure your model is defined properly
-from sqlalchemy.orm import sessionmaker
+from models import db
+from sqlalchemy import text  # Import the text() function
 
-# Create a session
-Session = sessionmaker(bind=db.engine)
-session = Session()
-
+# Make sure we are in an application context
 with app.app_context():
-    # Example of querying all requests
-    all_requests = session.query(Request).all()
-    
-    for request in all_requests:
-        print(f"Request ID: {request.id}, Status: {request.status}")
+    # Step 1: Create the sequence if it doesn't exist
+    db.session.execute(text('''
+        CREATE SEQUENCE IF NOT EXISTS scanned_id_seq
+        START WITH 1
+        INCREMENT BY 1
+        NO MINVALUE
+        NO MAXVALUE
+        CACHE 1;
+    '''))
 
-    # Example of adding a new request
-    new_request = Request(
-        status="pending",
-        asset_id=1,
-        user_name="Hosea",
-        asset_name="Lenovo ideapad",
-        user_id=7
-    )
-    
-    session.add(new_request)
-    session.commit()
-    print("New request added!")
+    # Step 2: Alter the 'id' column to use the sequence
+    db.session.execute(text('''
+        ALTER TABLE scanned
+        ALTER COLUMN id SET DEFAULT nextval('scanned_id_seq');
+    '''))
 
-    # Close the session
-    session.close()
+    # Commit the transaction to save changes
+    db.session.commit()
+
+    # Optionally, check if the table structure was updated
+    result = db.session.execute(text("SELECT column_name FROM information_schema.columns WHERE table_name='scanned';"))
+    for row in result:
+        print(row)

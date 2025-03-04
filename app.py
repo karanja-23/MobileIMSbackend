@@ -145,28 +145,13 @@ def reject_request(request_id):
     db.session.commit()
     return jsonify({'message': 'Request rejected successfully'}), 200
 
-@app.route('/requests/<int:request_id>/return', methods=['PATCH'])
-def return_asset(request_id):
-    my_request = Request.query.get(request_id)
-    if my_request is None:
-        return jsonify({'message': 'Request not found'}), 404
-    my_request.status = 'returned'
-    my_request.returned_at = db.func.current_timestamp()
-    db.session.commit()
-    return jsonify({'message': 'Asset returned successfully'}), 200
 
 @app.route('/requests', methods=['GET'])
 def get_requests():
     my_requests = Request.query.all()
-    return jsonify({'requests': [my_request.to_dict() for my_request in my_requests]}), 200
+    return jsonify([my_request.to_dict() for my_request in my_requests]), 200
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=6010)
     
-@app.route('/users/all', methods=['GET'])
-def get_all_users():
-    try:
-        users = User.query.all()
-        return jsonify({'users': [user.to_dict() for user in users]}), 200
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
