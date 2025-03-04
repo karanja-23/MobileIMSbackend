@@ -113,7 +113,9 @@ def get_scanned_entry(scanned_id):
 def create_request():
     asset_id = request.json.get('asset_id')
     user_id = request.json.get('user_id')
-    request = Request(asset_id=asset_id, user_id=user_id)
+    user_name = request.json.get('user_name')
+    asset_name = request.json.get('asset_name')
+    request = Request(asset_id=asset_id, user_id=user_id, user_name=user_name, asset_name=asset_name)
     db.session.add(request)
     db.session.commit()
     return jsonify({'message': 'Request created successfully'}), 201

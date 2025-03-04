@@ -25,7 +25,10 @@ class Request(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     status = db.Column(db.String(50), default='pending')
     requested_at = db.Column(db.DateTime, default=db.func.current_timestamp())
-    returned_at = db.Column(db.DateTime, nullable=True)
+    asset_id = db.Column(db.Integer, nullable=False)
+    user_name = db.Column(db.String(100), nullable=False)
+    asset_name = db.Column(db.String(100), nullable=False)
+    user_id = db.Column(db.Integer, nullable=False)
 
 class User(db.Model):
     __tablename__ = "user"  
@@ -60,8 +63,7 @@ class Role(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), unique=True, nullable=False)
-    permissions = db.Column(db.ARRAY(db.String), default=[])
-
+    permissions = db.Column(db.ARRAY(db.String), default=[])    
     users = db.relationship("User", back_populates="role")
 
     def __repr__(self):
