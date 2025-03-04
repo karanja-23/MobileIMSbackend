@@ -22,7 +22,7 @@ class Scanned(db.Model, SerializerMixin):
 
 
 class Request(db.Model, SerializerMixin):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True , unique=True, nullable=False autoincrement=True)
     status = db.Column(db.String(50), default='pending')
     requested_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     asset_id = db.Column(db.Integer, nullable=False)
