@@ -115,8 +115,8 @@ def create_request():
     user_id = request.json.get('user_id')
     user_name = request.json.get('user_name')
     asset_name = request.json.get('asset_name')
-    request = Request(asset_id=asset_id, user_id=user_id, user_name=user_name, asset_name=asset_name)
-    db.session.add(request)
+    my_request = Request(asset_id=asset_id, user_id=user_id, user_name=user_name, asset_name=asset_name)
+    db.session.add(my_request)
     db.session.commit()
     return jsonify({'message': 'Request created successfully'}), 201
 
@@ -129,36 +129,36 @@ def get_request(request_id):
 
 @app.route('/requests/<int:request_id>/approve', methods=['PATCH'])
 def approve_request(request_id):
-    request = Request.query.get(request_id)
-    if request is None:
+    my_request = Request.query.get(request_id)
+    if my_request is None:
         return jsonify({'message': 'Request not found'}), 404
-    request.status = 'approved'
+    my_request.status = 'approved'
     db.session.commit()
     return jsonify({'message': 'Request approved successfully'}), 200
 
 @app.route('/requests/<int:request_id>/reject', methods=['PATCH'])
 def reject_request(request_id):
-    request = Request.query.get(request_id)
-    if request is None:
+    my_request = Request.query.get(request_id)
+    if my_request is None:
         return jsonify({'message': 'Request not found'}), 404
-    request.status = 'rejected'
+    my_request.status = 'rejected'
     db.session.commit()
     return jsonify({'message': 'Request rejected successfully'}), 200
 
 @app.route('/requests/<int:request_id>/return', methods=['PATCH'])
 def return_asset(request_id):
-    request = Request.query.get(request_id)
-    if request is None:
+    my_request = Request.query.get(request_id)
+    if my_request is None:
         return jsonify({'message': 'Request not found'}), 404
-    request.status = 'returned'
-    request.returned_at = db.func.current_timestamp()
+    my_request.status = 'returned'
+    my_request.returned_at = db.func.current_timestamp()
     db.session.commit()
     return jsonify({'message': 'Asset returned successfully'}), 200
 
 @app.route('/requests', methods=['GET'])
 def get_requests():
-    requests = Request.query.all()
-    return jsonify({'requests': [request.to_dict() for request in requests]}), 200
+    my_requests = Request.query.all()
+    return jsonify({'requests': [my_request.to_dict() for my_request in my_requests]}), 200
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=6010)
