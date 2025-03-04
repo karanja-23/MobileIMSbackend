@@ -13,6 +13,7 @@ class Scanned(db.Model, SerializerMixin):
     status=db.Column(db.String(80), default='pending', unique=False, nullable=False)
     scanned_at = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp())
     
+    scanned = db.relationship("Scanned", back_populates="user")
       
     def __repr__(self):
         return '<Scanned %r>' % self.id
