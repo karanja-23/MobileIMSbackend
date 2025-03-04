@@ -145,7 +145,14 @@ def reject_request(request_id):
     db.session.commit()
     return jsonify({'message': 'Request rejected successfully'}), 200
 
-
+@app.route('/requests/<int:request_id>', methods=['DELETE'])    
+def delete_request(request_id):
+    my_request = Request.query.get(request_id)
+    if my_request is None:
+        return jsonify({'message': 'Request not found'}), 404
+    db.session.delete(my_request)
+    db.session.commit()
+    return jsonify({'message': 'Request deleted successfully'}), 200
 @app.route('/requests', methods=['GET'])
 def get_requests():
     my_requests = Request.query.all()
