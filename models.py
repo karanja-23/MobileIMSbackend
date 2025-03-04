@@ -9,11 +9,12 @@ class Scanned(db.Model, SerializerMixin):
     __tablename__ = 'scanned'
     
     id = db.Column(db.Integer, primary_key=True, unique=True, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     name=db.Column(db.String(80), unique=False, nullable=False)
     status=db.Column(db.String(80), default='pending', unique=False, nullable=False)
     scanned_at = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp())
     
-    scanned = db.relationship("Scanned", back_populates="user")
+    user= db.relationship("User", back_populates="scanned")
       
     def __repr__(self):
         return '<Scanned %r>' % self.id
@@ -26,3 +27,30 @@ class Request(db.Model, SerializerMixin):
     requested_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     returned_at = db.Column(db.DateTime, nullable=True)
 
+class User(db.Model):
+    __tablename__ = "user"  
+
+    id = db.Column(db.Integer, primary_key=True)
+    scanned_id =db.Column(db.Integer, db.ForeignKey('scanned.id'), nullable=True)
+    name = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(100), unique=True, nullable=False)
+    phone_number = db.Column(db.String(20), unique=True, nullable=False)
+    password= db.Column(db.String(120), nullable=False)
+    role_id = db.Column(db.Integer, db.ForeignKey("roles.id"), nullable=False)
+
+    scanned = db.relationship("Scanned", back_populates="user")
+
+    role = db.relationship("Role", back_populates="users")  
+
+    def __repr__(self):
+        return f"<User {self.name}>"
+    
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "email": self.email,
+            "phone_number": self.phone_number,
+            "role": self.role.name if self.role else None,
+            "scanned": [scanned.to_dict()for scanned in self.scanned]
+        }
