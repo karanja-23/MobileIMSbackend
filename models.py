@@ -8,7 +8,7 @@ db=SQLAlchemy()
 class Scanned(db.Model, SerializerMixin):
     __tablename__ = 'scanned'
     
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, unique=True, nullable=False)
     name=db.Column(db.String(80), unique=False, nullable=False)
     status=db.Column(db.String(80), default='pending', unique=False, nullable=False)
     scanned_at = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp())
