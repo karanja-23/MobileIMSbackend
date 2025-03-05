@@ -31,7 +31,7 @@ class Request(db.Model, SerializerMixin):
     user_name = db.Column(db.String(100), nullable=False)
     asset_name = db.Column(db.String(100), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    user=db.relationship("User", back_populates="requests", foreign_keys=[user_id])
+    user=db.relationship("User", back_populates="request", foreign_keys=[user_id])
     serialize_only = ('id', 'status', 'requested_at', 'asset_id', 'user_name', 'asset_name', 'user_id')
 
 class User(db.Model, SerializerMixin):
