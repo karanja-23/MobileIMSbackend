@@ -16,6 +16,7 @@ class Scanned(db.Model, SerializerMixin):
     
     user= db.relationship("User", back_populates="scanned", foreign_keys=[user_id])
     serialize_only = ('id', 'user_id', 'name', 'status', 'scanned_at')
+    
     def __repr__(self):
         return '<Scanned %r>' % self.id
 
