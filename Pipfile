@@ -11,6 +11,7 @@ sqlalchemy-serializer = "*"
 requests = "*"
 dotenv = "*"
 psycopg2-binary = "*"
+flask-cors = "*"
 
 [dev-packages]
 
