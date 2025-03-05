@@ -4,9 +4,11 @@ from models import db,  Scanned, Request, User
 from flask_migrate import Migrate
 import requests
 from dotenv import load_dotenv
+from flask_cors import CORS
 load_dotenv()
 
 app = Flask(__name__)
+CORS(app)
 DB_CONFIG = {
         "dbname": os.getenv("POSTGRES_DB"),
         "user": os.getenv("POSTGRES_USER"),
