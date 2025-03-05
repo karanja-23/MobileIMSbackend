@@ -45,7 +45,7 @@ class User(db.Model, SerializerMixin):
     password= db.Column(db.String(120), nullable=False)
     role_id = db.Column(db.Integer, db.ForeignKey("roles.id"), nullable=False)
 
-    request = db.relationship("Request", back_populates="user")
+    requests = db.relationship("Request", back_populates="user")
 
     role = db.relationship("Role", back_populates="users")  
    
