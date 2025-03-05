@@ -38,7 +38,7 @@ def create_scanned():
     return jsonify({'message': 'Scanned entry created successfully'}), 201
 @app.route('/scanned/<int:scanned_id>', methods=['PATCH'])
 def update_scanned(scanned_id):
-    expo_token = request.args.get('expo_token')
+    
     scanned = Scanned.query.get(scanned_id)
     if not scanned:
         return jsonify({'error': 'Scanned entry not found'}), 404
@@ -46,34 +46,6 @@ def update_scanned(scanned_id):
     scanned.status = status
     db.session.commit()
     
-    if status == 'approved':
-        url = 'https://api.exp.host/v2/push/send'
-        headers = {
-            'Content-Type': 'application/json',
-        }
-        data = {
-            'to': expo_token,
-            'sound': 'default',
-            'title': 'Approved',
-            'body': 'Asset request has been approved',
-        }
-        response = requests.post(url, headers=headers, json=data)
-        if response.status_code != 200:
-            return jsonify({'error': 'Failed to send notification'}), 500
-    elif status == 'rejected':
-        url = 'https://api.exp.host/v2/push/send'
-        headers = {
-            'Content-Type': 'application/json',
-        }
-        data = {
-            'to': expo_token,
-            'sound': 'default',
-            'title': 'Rejected',
-            'body': 'Asset request has been cancelled',
-        }
-        response = requests.post(url, headers=headers, json=data)
-        if response.status_code != 200:
-            return jsonify({'error': 'Failed to send notification'}), 500
     return jsonify({'message': 'Scanned entry updated successfully'}), 200
 @app.route('/scanned/<int:scanned_id>', methods=['DELETE'])
 def delete_scanned(scanned_id):
