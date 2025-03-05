@@ -82,14 +82,6 @@ def delete_scanned(scanned_id):
     db.session.commit()
     return jsonify({'message': 'Scanned entry deleted successfully'}), 200
 
-def delete_scanned(scanned_id):
-    scanned = Scanned.query.get(scanned_id)
-    if not scanned:
-        return jsonify({'error': 'Scanned entry not found'}), 404
-    db.session.delete(scanned)
-    db.session.commit()
-    return jsonify({'message': 'Scanned entry deleted successfully'}), 200
-
 @app.route('/scanned', methods=['GET'])
 def get_scanned_history():
     """
