@@ -59,7 +59,7 @@ class User(db.Model, SerializerMixin):
             "email": self.email,
             "phone_number": self.phone_number,
             "role": self.role.name if self.role else None,
-            "request": [request.to_dict()for request in self.request]
+            "requests": [request.to_dict()for request in self.request]
         }
 
 class Role(db.Model):
