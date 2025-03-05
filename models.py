@@ -9,27 +9,28 @@ class Scanned(db.Model, SerializerMixin):
     __tablename__ = 'scanned'
     
     id = db.Column(db.Integer, primary_key=True, unique=True, nullable=False, autoincrement=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user_id = db.Column(db.Integer, nullable=False)
     name=db.Column(db.String(80), unique=False, nullable=False)
     status=db.Column(db.String(80), default='pending', unique=False, nullable=False)
     scanned_at = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp())
     
-    user= db.relationship("User", back_populates="scanned", foreign_keys=[user_id])
-    serialize_only = ('id', 'user_id', 'name', 'status', 'scanned_at')
-    
+        
     def __repr__(self):
         return '<Scanned %r>' % self.id
 
 
 
 class Request(db.Model, SerializerMixin):
+    
     id = db.Column(db.Integer, primary_key=True, unique=True, nullable=False, autoincrement=True)
     status = db.Column(db.String(50), default='pending')
     requested_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     asset_id = db.Column(db.Integer, nullable=False)
     user_name = db.Column(db.String(100), nullable=False)
     asset_name = db.Column(db.String(100), nullable=False)
-    user_id = db.Column(db.Integer, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user=db.relationship("User", back_populates="requests", foreign_keys=[user_id])
+    serialize_only = ('id', 'status', 'requested_at', 'asset_id', 'user_name', 'asset_name', 'user_id')
 
 class User(db.Model, SerializerMixin):
     __tablename__ = "user"  
